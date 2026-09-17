@@ -36,7 +36,7 @@ int main (void) {
 
 
     // 생성한 싱글 리스트가 유효한지 판단합니다.
-    USERDATA * p = &u_group[0];
+    USERDATA * p = u_group;
 
     while (p != NULL) {
         printf("age : %d, name : %s, phone : %s\n", p->age, p->name, p->phone);
