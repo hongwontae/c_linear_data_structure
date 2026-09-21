@@ -1,0 +1,63 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+
+typedef struct USERDATA {
+
+    int age;
+    char name [32];
+    char phone [32];
+    struct USERDATA * p_next;
+
+} USERDATA;
+
+USERDATA * global_head_node = NULL;
+
+void add_new_node (const char my_string [], const int age, const char phone_number []) {
+
+    USERDATA * new_node = (USERDATA *) malloc(sizeof(USERDATA));
+
+
+    // 데이터 추가 
+    new_node->age = age;
+    strcpy(new_node->name, my_string);
+    strcpy(new_node->phone, phone_number);
+    new_node->p_next = NULL;
+
+    if (global_head_node == NULL) {
+        global_head_node = new_node;
+    } else {
+        new_node->p_next = global_head_node;
+        global_head_node = new_node;
+    }
+    
+
+};
+
+void initial_data_add () {
+    add_new_node("Hello-kkk", 10, "010-2c22-1111");
+    add_new_node("Hello-bbb", 20, "010-1422-11ss");
+    add_new_node("Hello-ccc", 30, "010-2452-1141");
+    add_new_node("Hello-ddd", 40, "010-22ff-11as");
+}
+
+int main (void) {
+
+    initial_data_add();
+
+    USERDATA * main_head_node = global_head_node;
+
+    while (main_head_node != NULL) {
+        
+        printf("[Current Address %p] name : %s, age : %d, phone : %s, Next Address : %p \n",
+            main_head_node, main_head_node->name, main_head_node->age, main_head_node->phone, main_head_node->p_next
+        );
+
+        main_head_node = main_head_node->p_next;
+    }
+    
+
+
+    return 0;
+}
