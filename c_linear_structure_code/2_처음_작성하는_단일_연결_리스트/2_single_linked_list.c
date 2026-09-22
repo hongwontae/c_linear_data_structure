@@ -1,3 +1,6 @@
+// 사실 Stack 구조입니다. -> input과 output이 다른 방향입니다.
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,6 +45,24 @@ void initial_data_add () {
     add_new_node("Hello-ddd", 40, "010-22ff-11as");
 }
 
+void node_clear () {
+
+    USERDATA * clear_p_head_node = global_head_node;
+    USERDATA * back_up = NULL;
+
+    while (clear_p_head_node != NULL) {
+        back_up = clear_p_head_node->p_next;
+
+        printf("Delete Node : [Current Address%p] name : %s, [Next Address %p]\n",
+             clear_p_head_node, clear_p_head_node->name, clear_p_head_node->p_next);
+
+        free(clear_p_head_node);
+        clear_p_head_node = back_up;
+    }
+
+}
+
+
 int main (void) {
 
     initial_data_add();
@@ -56,7 +77,7 @@ int main (void) {
 
         main_head_node = main_head_node->p_next;
     }
-    
+    node_clear();
 
 
     return 0;
