@@ -1,4 +1,3 @@
-// 새 노드 추가하기 + 순차적으로 add
 
 #include <stdio.h>
 #include <stdlib.h>

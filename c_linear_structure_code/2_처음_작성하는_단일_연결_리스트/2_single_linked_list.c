@@ -1,6 +1,5 @@
 // 사실 Stack 구조입니다. -> input과 output이 다른 방향입니다.
 
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
