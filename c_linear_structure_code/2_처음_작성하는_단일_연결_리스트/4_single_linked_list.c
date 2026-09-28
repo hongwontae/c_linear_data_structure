@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -81,7 +82,6 @@ USERDATA * search_by_name (const char * search_name) {
     return NULL;
 
 }
-
 
 int main(void)
 {   

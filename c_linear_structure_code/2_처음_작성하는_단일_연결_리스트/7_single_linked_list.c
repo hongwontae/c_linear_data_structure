@@ -1,161 +1,164 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct USERDATA
 {
-
     int age;
-    char name[32];
-    char phone[32];
+    char name[30];
+    char phone[30];
     struct USERDATA *p_next;
 
 } USERDATA;
 
-USERDATA *global_head_node = NULL;
+USERDATA * global_head_node = NULL;
 
-void add_node(const char *name, const int age, const char *phone)
-{
+void add_new_node (int age, char name [], char phone []) {
 
-    USERDATA *new_node = malloc(sizeof(USERDATA));
-
+    USERDATA * new_node = (USERDATA *) malloc(sizeof(USERDATA));
+    
     new_node->age = age;
     strcpy(new_node->name, name);
     strcpy(new_node->phone, phone);
     new_node->p_next = NULL;
 
-    USERDATA *head_add_node = global_head_node;
-
-    if (head_add_node == NULL)
-    {
+    if (global_head_node == NULL) {
         global_head_node = new_node;
-    }
-    else
-    {
-        while (head_add_node != NULL)
-        {
-            if (head_add_node->p_next == NULL)
-            {
-                head_add_node->p_next = new_node;
-                break;
-            }
-            head_add_node = head_add_node->p_next;
+    } else {
+        USERDATA * end_node = global_head_node;
+
+        while (end_node->p_next != NULL) {
+            end_node = end_node->p_next;
         }
+
+        end_node->p_next = new_node;
+
     }
 
-    printf("Add Success [name %s, age %d]\n", name, age);
 }
 
-void init()
-{
-    add_node("Hong", 10, "010-9999-3333");
-    add_node("Kim", 20, "010-8888-3333");
-    add_node("Ji", 30, "010-7777-3333");
-    add_node("Jang", 40, "010-6666-3333");
-    add_node("Land", 50, "010-5555-3333");
-    add_node("OPks", 60, "010-4444-3333");
+void initial_add_user () {
+    add_new_node(14, "Hoon", "010-8489-3121");
+    add_new_node(14, "Kim", "010-8489-3121");
+    add_new_node(14, "Hong", "010-8489-3121");
+    add_new_node(14, "Lang", "010-8489-3121");
+    add_new_node(40, "Jang", "010-8489-3121");
 }
 
-void print_node()
-{
+void clear_node () {
 
-    USERDATA *print_head_node = global_head_node;
+    USERDATA * clear_node = global_head_node;
+    USERDATA * back_up = NULL;
 
-    while (print_head_node != NULL)
+    while (clear_node != NULL) {
+        back_up = clear_node->p_next;
+        
+        printf("삭제할 노드 : %p, 이름은 %s, 다음은 %p\n", clear_node, clear_node->name, clear_node->p_next);
+
+        free(clear_node);
+
+        clear_node = back_up;
+    }
+
+
+}
+
+void print_node () {
+
+    USERDATA * print_head_node = global_head_node;
+
+        while (print_head_node != NULL)
     {
-        printf("[Current Address : %p] name : %s, age %d, phone : %s, [Next Address : %p]\n",
-               print_head_node, print_head_node->name, print_head_node->age, print_head_node->phone, print_head_node->p_next);
+        printf("[Current Addess : %p] name : %s, age : %d, phone : %s, [Next Address : %p] \n",
+            print_head_node, print_head_node->name, print_head_node->age, print_head_node->phone, print_head_node->p_next);
 
         print_head_node = print_head_node->p_next;
     }
-
     printf("\n");
 }
 
-void clear_node()
-{
-    USERDATA *head_clear_node = global_head_node;
+USERDATA * search_by_name (const char * search_name) {
 
-    while (head_clear_node != NULL)
-    {
-        USERDATA *temp;
-        temp = head_clear_node->p_next;
-        free(head_clear_node);
-        head_clear_node = temp;
-    }
+    USERDATA * search_node = global_head_node;
 
-    global_head_node = NULL;
-}
+    while (search_node != NULL) {
 
-void search_node(char *name)
-{
-
-    USERDATA *search_head_node = global_head_node;
-
-    USERDATA *search_result = NULL;
-
-    while (search_head_node != NULL)
-    {
-        if (strcmp(search_head_node->name, name) == 0)
-        {
-            search_result = search_head_node;
-            break;
-        }
-        search_head_node = search_head_node->p_next;
-    }
-    if (search_result != NULL)
-    {
-        printf("Found!\n");
-        printf("[Current Address : %p] name : %s, age : %d, phone : %s, [Next Address : %p]\n",
-               search_result, search_result->name, search_result->age, search_result->phone, search_result->p_next);
-    }
-    else
-    {
-        printf("Not Found!\n");
-    }
-}
-
-void delete_node(char *name)
-{
-
-    USERDATA *current_node = global_head_node;
-    USERDATA *prev_node = NULL;
-
-    while (current_node != NULL)
-    {
-
-        if (strcmp(current_node->name, name) == 0)
-        {
-            if (prev_node == NULL)
-            {
-                printf("Delete Success, name -> %s\n", current_node->name);
-                global_head_node = current_node->p_next;
-                free(current_node);
-            }
-            else
-            {
-                printf("Delete Success, name -> %s\n", current_node->name);
-                prev_node->p_next = current_node->p_next;
-                free(current_node);
-                return;
-            }
+        if (strcmp(search_node->name, search_name) == 0) {
+            printf("%s FOUND!\n", search_node->name);
+            return search_node;
         }
 
-        prev_node = current_node;
-        current_node = current_node->p_next;
+        search_node = search_node->p_next;
     }
+
+    printf("%s NOT FOUND\n", search_name);
+
+    return NULL;
+
+}
+
+USERDATA * search_to_remove (USERDATA ** pp_prev, const char * name) {
+
+    USERDATA * p_current = global_head_node;
+    USERDATA * p_prev = NULL;
+
+    while (p_current != NULL) {
+        if (strcmp(p_current->name, name) == 0) {
+            *pp_prev = p_prev;
+            return p_current;
+        }
+        p_prev = p_current;
+        p_current = p_current->p_next;
+    }
+
+    return NULL;
+
+}
+
+void remove_node (USERDATA * p_previous) {
+
+    USERDATA * p_remove = NULL;
+
+    if (p_previous == NULL) {
+        if (global_head_node == NULL) {
+            return;
+        } else {
+            p_remove = global_head_node;
+            global_head_node = p_remove->p_next;
+            printf("remove_node -> %s\n", p_remove->name);
+            free(p_remove);
+        }
+
+        return ;
+    }
+
+    p_remove = p_previous->p_next;
+    p_previous->p_next = p_remove->p_next;
+    free(p_remove);
+
+}
+
+void test_stop_01 () {
+
 }
 
 int main(void)
-{
+{   
 
-    init();
+    initial_add_user();
+
     print_node();
-    search_node("Kim");
-    search_node("KKK");
-    delete_node("Kim");
-    delete_node("Hong");
+
+    USERDATA * pPrev = NULL;
+    if (search_to_remove(&pPrev, "Hooun") != NULL) {
+        remove_node(pPrev);
+    } else {
+        printf("name과 일치하는 노드가 없어서 삭제할 수 없습니다.\n");
+    }
+
+
     print_node();
+    
     clear_node();
 
     return 0;
