@@ -41,7 +41,6 @@ void init () {
     add_new_node(10, "hong", "010-8489-3121");
 }
 
-
 void print_node () {
 
     USERDATA * head_node = &global_head_node;
@@ -57,11 +56,32 @@ void print_node () {
 
 }
 
+void clear_node () {
+
+    USERDATA * head_node = global_head_node.p_next;
+
+    while (head_node != NULL) {
+
+        USERDATA * next_address = head_node->p_next;
+
+        printf("free 작업 중.. 현 주소 : %p, 이름 : %s 다음 주소 : %p\n", head_node, head_node->name, next_address );
+
+        free(head_node);
+
+        head_node = next_address;
+
+    }
+    
+    printf("\n");
+
+}
+
 int main (void) {
 
 
     init();
     print_node();
+    clear_node();
 
 
     return 0;
