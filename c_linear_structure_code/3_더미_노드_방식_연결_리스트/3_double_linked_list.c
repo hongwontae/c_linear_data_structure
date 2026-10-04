@@ -123,7 +123,7 @@ USERDATA * search_node (char * name) {
 
 }
 
-void remove_mode (USERDATA * user) {
+void remove_node (USERDATA * user) {
 
     printf("remove!");
 
@@ -146,6 +146,16 @@ int main () {
     init();
     forward_print_node();
     backward_print_node();
+
+    USERDATA * search_1 = search_node("hong");
+    USERDATA * search_2 = search_node("hong");
+    USERDATA * search_3 = search_node("ooo");
+
+    remove_node(search_1);
+
+    forward_print_node();
+
+
     clear_node();
 
 
