@@ -136,3 +136,45 @@ void remove_node (USERDATA * user) {
 
 }
 
+void copy_node_data (USERDATA * user1, USERDATA * user2) {
+    user1->age = user2->age;
+    strcpy(user1->name, user2->name);
+    strcpy(user1->phone, user2->phone);
+}
+
+void swap_node (USERDATA * user1, USERDATA * user2) {
+    USERDATA  tmp = * user1;
+    copy_node_data(user1, user2);
+    copy_node_data(user2, &tmp);
+}
+
+void sort_list_by_name () {
+
+    // 처음은 실질적인 첫 노드부터 시작합니다.
+    USERDATA * p_tmp = global_head_node.p_next;
+    USERDATA * p_selected = NULL;
+    USERDATA * p_cmp = NULL;
+
+    while (p_tmp != NULL && p_tmp != global_tail_node.p_prev) {
+
+        p_selected = p_tmp;
+        p_cmp = p_selected->p_next;
+
+        while (p_cmp != NULL && p_cmp != &global_tail_node) {
+            if (strcmp(p_selected->name, p_cmp->name) > 0) {
+                p_selected = p_cmp;
+            }
+
+            p_cmp = p_cmp->p_next;
+        }
+
+        if (p_selected != p_tmp) {
+            swap_node(p_selected, p_tmp);
+        }
+
+        p_selected = NULL;
+        p_tmp = p_tmp->p_next;
+    }
+
+
+}

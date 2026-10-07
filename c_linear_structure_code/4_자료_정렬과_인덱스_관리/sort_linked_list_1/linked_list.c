@@ -9,7 +9,7 @@ int main () {
 
     connect_double_linked_list();
 
-    test_sort_list_01();
+    test_sort_list_04();
 
     return 0;
 }

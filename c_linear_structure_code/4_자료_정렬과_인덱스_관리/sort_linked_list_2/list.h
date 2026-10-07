@@ -24,3 +24,6 @@ void init (void);
 int is_empty (void);
 USERDATA * search_node (char * name);
 void remove_node (USERDATA * user);
+void copy_node_data (USERDATA * user1, USERDATA * user2);
+void swap_node (USERDATA * user1, USERDATA * user2);
+void sort_list_by_name (void);
