@@ -302,7 +302,7 @@ void ** search_by_age_range (int min, int max, int * cnt) {
         // count는 출력할 떄 필요해서 cnt를 주소로 받아서 넘겨줍니다.
         *cnt = count;
 
-            
+        
         void ** p_node_ptr_list = malloc(sizeof(void *) * count);
 
         p_tmp = p_min;
