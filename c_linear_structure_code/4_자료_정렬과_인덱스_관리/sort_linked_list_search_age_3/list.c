@@ -161,7 +161,6 @@ void swap_node (USERDATA * user1, USERDATA * user2) {
 
 void sort_list_by_name () {
 
-    // 처음은 실질적인 첫 노드부터 시작합니다.
     USERDATA * p_tmp = global_head_node.p_next;
     USERDATA * p_selected = NULL;
     USERDATA * p_cmp = NULL;
@@ -236,6 +235,7 @@ void sort_list_by_age (void) {
 }
 
 
+// 범위에 해당되는 노드 집합을 전달해주는 함수입니다.
 void ** search_by_age_range (int min, int max, int * cnt) {
     
     // 현재로는 판단안됨 / 단 p_tmp는 더미 헤드 노드의 첫 부분 -> 실질적인 첫 노드
@@ -244,7 +244,8 @@ void ** search_by_age_range (int min, int max, int * cnt) {
     USERDATA * p_max = NULL;
     USERDATA * p_tmp = global_head_node.p_next;
 
-    // 첫 노드가 더미 테일 노드가 아니라면 지속합니다.
+    // 노드가 더미 테일 노드가 아니라면 지속합니다.
+    // 이 루프의 결과는 최소 나이를 가진 노드들 중 가장 먼저 저장되었던 노드를 p_min, p_max에 대입합니다.
     while (p_tmp != &global_tail_node) {
 
         // 첫 노드부터 검사를 시작합니다.
@@ -261,6 +262,7 @@ void ** search_by_age_range (int min, int max, int * cnt) {
     }
 
     // 만약 최소값 노드가 널이 아니라면 p_tmp을 최소값 다음 노드로 이동시킵니다.
+    // 최소값 노드 다음부터 찾아야 최대값 노드를 찾을 수 있습니다.
     if (p_min != NULL) {
         p_tmp = p_min->p_next;
     // p_min이 널이라면 실질적인 첫 노드를 가져옵니다.
@@ -303,16 +305,23 @@ void ** search_by_age_range (int min, int max, int * cnt) {
         *cnt = count;
 
         
+        // void *의 주소를 값으로 가지는 이중 포인터를 선언합니다.
+        // 이 떄 void *를 값으로 갖는 배열의 수는 count입니다. -> 즉, 최소 ~ 최대 노드 개수
         void ** p_node_ptr_list = malloc(sizeof(void *) * count);
 
+        // p_min은 최소 노드
         p_tmp = p_min;
 
         int i = 0;
 
+        // 최소 노드부터 시작해서 지속적으로 앞으로 나아갑니다.
+        // 앞으로 나아가는 값이 최대 노드와 같다면 정지합니다.
         for (; p_tmp != p_max; ++i) {
             p_node_ptr_list[i] = p_tmp;
             p_tmp = p_tmp->p_next;
         }
+
+        // 마지막 노드에 최대 값 노드를 추가하고 return 합니다.
         p_node_ptr_list[i] = p_max;
 
         return p_node_ptr_list;
