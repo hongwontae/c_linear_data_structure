@@ -90,8 +90,8 @@ void ReleaseList(void)
 void NodeDataCopy(USERDATA* pLeft, USERDATA* pRight)
 {
 	pLeft->age = pRight->age;
-	strcpy_s(pLeft->name, sizeof(pLeft->name), pRight->name);
-	strcpy_s(pLeft->phone, sizeof(pLeft->phone), pRight->phone);
+	strcpy(pLeft->name,  pRight->name);
+	strcpy(pLeft->phone, pRight->phone);
 }
 
 void SwapNode(USERDATA* pLeft, USERDATA* pRight)
@@ -222,8 +222,8 @@ void AddNewNode(int age, char* pszName, char* pszPhone)
 {
 	USERDATA* pNewNode = calloc(1, sizeof(USERDATA));
 	pNewNode->age = age;
-	strcpy_s(pNewNode->name, sizeof(pNewNode->name), pszName);
-	strcpy_s(pNewNode->phone, sizeof(pNewNode->phone), pszPhone);
+	strcpy(pNewNode->name,pszName);
+	strcpy(pNewNode->phone, pszPhone);
 
 	USERDATA* pPrevNode = g_TailNode.pPrev;
 	pPrevNode->pNext = pNewNode;

@@ -8,7 +8,6 @@ MY_MENU PrintMenu(void)
 {
 	MY_MENU input = 0;
 
-	system("cls");
 	printf("[1]New\t[2]Search\t[3]Search age\t[4]Print\t[5]Remove\t[0]Exit\n");
 	scanf("%d%*c", &input);
 	return input;

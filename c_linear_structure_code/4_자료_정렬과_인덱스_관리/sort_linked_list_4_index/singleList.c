@@ -112,32 +112,52 @@ void SortListByName(void)
 
 void SortListByAge(void)
 {
+	// 비어있다면 돌려보냅니다.
 	if (IsEmpty())
 		return;
 
+	// p_tmp는 실질적인 첫 노드
+	// p_selected는 선택정렬의 노드
+	// p_cmp는 움직일 노드
 	USERDATA* pTmp = g_HeadNode.pNext;
 	USERDATA* pSelected = NULL;
 	USERDATA* pCmp = NULL;
+
+	// p_tmp가 null이거나 p_tmp가 더미 테일 노드의 뒷 부분이라면 지속을 멈춥니다.
+	// p_tmp = p_tmp -> p_next로 모든 노드를 돕니다.
+	// 실질적인 마지막 노드를 신경쓰지 않아도 되는 이유는 선택 정렬로 인해서 마지막 노드를 정렬되기 때문입니다.
 	while (pTmp != NULL && pTmp != g_TailNode.pPrev)
 	{
+		// p_selected에 기준 노드를 전달해주고 p_cmp는 그 다음 노드를 전달합니다.
 		pSelected = pTmp;
 		pCmp = pTmp->pNext;
+
+		// p_cmp가 null이 아니거나 p_cmp가 tailnode가 아니라면 지속합니다.
 		while (pCmp != NULL && pCmp != &g_TailNode)
 		{
+			// 나이를 비교합니다.
+			// 나이 비교시 더 높으면 선택정렬의 노드로 위치됩니다.
 			if (pSelected->age > pCmp->age)
 				pSelected = pCmp;
-
+			// 이를 지속합니다.
 			pCmp = pCmp->pNext;
 		}
 
+		// 만약 변경이 되지 않았다면 아무것도 하지 않습니다.
+		// 변경이 되었다면 SwapNode를 통해 값만 바꿔줍니다.
 		if (pTmp != pSelected)
 			SwapNode(pTmp, pSelected);
-
+		
+		// p_selected를 다시 널로 만들고 선택정렬을 다음 노드로 바꿉니다.
 		pSelected = NULL;
 		pTmp = pTmp->pNext;
 	}
 }
 
+// 정수를 반환하는 함수입니다.
+// 찾는 이름이 존재하면 1 그렇지 않으면 0을 반환합니다.
+// 매개변수로 받은 p_user는 구조체 주소고 이를 memcpy하면 호출자 함수의 p_user가 업데이트 됩니다.
+// p_tmp는 실질적인 첫 노드 -> 이를 계속 굴려서 찾으면 memcpy
 int SearchListByName(USERDATA* pUser, char* pszName)
 {
 	USERDATA* pTmp = g_HeadNode.pNext;
@@ -228,14 +248,21 @@ int SearchListByAge(int age)
 	return 0;
 }
 
-void** SearchByAgeRange(int min, int max, int* pCount)
+
+USERDATA ** SearchByAgeRange(int min, int max, int* pCount)
 {
+
+	// 일단 자료구조가 정렬된 상태입니다.
+
 	*pCount = 0;
 	USERDATA* pMin = NULL;
 	USERDATA* pMax = NULL;
 	USERDATA* pTmp = g_HeadNode.pNext;
+
+	// p_tmp는 첫 노드부터 시작합니다.
 	while (pTmp != &g_TailNode)
 	{
+		// 정렬된 자료구조에서 min보다 같거나 큰 숫자중에 가장 작은 숫자를 구합니다.
 		if (pTmp->age >= min)
 		{
 			pMin = pTmp;
@@ -244,12 +271,18 @@ void** SearchByAgeRange(int min, int max, int* pCount)
 		pTmp = pTmp->pNext;
 	}
 
+	// 만약 min이 널이 아니라면 p_tmp는 p_min의 다음 요소
 	if (pMin != NULL)
 		pTmp = pMin->pNext;
 	else
+		// p_min이 널이라면 첫 노드
 		pTmp = g_HeadNode.pNext;
+	
+	// 더미 테일 노드를 만날떄까지 지속합니다.
 	while (pTmp != &g_TailNode)
 	{
+		// p_min이 넘는 노드에서 max보다 작거나 같다면 p_max에 대입합니다.
+		// 만약 p_tmp->age가 max를 넘는다면 break로 빠져나옵니다. -> 그 전 노드가 max 노드라서
 		if (pTmp->age <= max)
 			pMax = pTmp;
 		else if (pTmp->age > max)
@@ -258,19 +291,33 @@ void** SearchByAgeRange(int min, int max, int* pCount)
 		pTmp = pTmp->pNext;
 	}
 
+	// 둘 다 null이 아니라면 
 	if (pMin != NULL && pMax != NULL)
 	{
+		// p_tmp는 최소 나이를 가진 p_min 노드의 주소를 받습니다.
 		USERDATA* pTmp = pMin;
+
+		// 범위 노드를 세는 로직입니다. -> 컬렉션을 만들기 위해서 필요
 		int cnt = 1;
+		// p_tmp가 p_max를 만나면 시마이
 		while (pTmp != pMax)
 		{
 			++cnt;
 			pTmp = pTmp->pNext;
 		}
 
+		// 컬렉션의 개수는 호출자 함수도 알아야 하기 떄문에 역참조 연산자로 업데이트 합니다.
 		*pCount = cnt;
-		void** pNodePtrList = malloc(sizeof(void*) * cnt);
+		
+		// heap 영역에 USERDATA 주소를 담을 수 있는 공간을 cnt만큼 만들고 첫 주소를 반환합니다.
+		// 이제 나란히 배치되었기에 인덱스 연산 가능 -> [i]는 값의 타입만큼 이동 -> 값 타입은? USERDATA *
+		// 만약 USERDATA * p_node = malloc(sizeof(USERDATA) * cnt)라면? -> 값 자체를 만들어서 보내줘야 함
+		// 그렇기에 값에 * USERDATA가 들어가길 원하기에 이중 포인터로 선언합니다.
+		USERDATA ** pNodePtrList = malloc(sizeof(USERDATA*) * cnt);
 
+		// p_tmp를 다시 최소 나이를 가진 노드로 변경
+		// 컬렉션에 주소를 다시 넣어야 하는 작업을 하려고
+		// 이제 최소 ~ 최대에 해당하는 노드의 주소값을 넣습니다.
 		pTmp = pMin;
 		int i = 0;
 		for (; pTmp != pMax; ++i)
@@ -280,6 +327,7 @@ void** SearchByAgeRange(int min, int max, int* pCount)
 		}
 		pNodePtrList[i] = pMax;
 
+		//
 		return pNodePtrList;
 	}
 
@@ -295,11 +343,12 @@ USERDATA** MakeIndexAge(int* pCnt)
 		return NULL;
 
 	USERDATA ** aList;
+
 	// getlistcount()를 호출하면 총 연결 리스트 노드 개수를 알 수 있습니다.
 	// alist는 연결 리스트 노드 개수만큼 heap 영역에 USERDATA의 주소를 담을 수 있는 공간을 만듭니다.
 	// 즉, alist의 각 요소의 값들은 USERDATA의 주소입니다.
 	aList = malloc(sizeof(USERDATA*) * GetListCount());
-	// meeset으로 만든 공간을 0으로 초기화합니다.
+	// memset으로 만든 공간을 0으로 초기화합니다.
 	memset(aList, 0, sizeof(USERDATA*) * GetListCount());
 	// pcnt는 연결 리스트 총 개수
 	*pCnt = GetListCount();
@@ -316,7 +365,7 @@ USERDATA** MakeIndexAge(int* pCnt)
 		pTmp = pTmp->pNext;
 	}
 
-	// 그리고 전체를 돌립니다. -> 마지막 노드는 흐름상 정렬이 될 거라 횟수를 한 번 줄여도 됩니다.
+	// 그리고 전체를 돌립니다. -> 마지막 노드는 흐름상 정렬이 될 거라 횟수를 한 번 줄여도 됩니다. -> 선택정렬 알고리즘에 의해서
 	// GetlistCount()가 10개라고 가정하고 노드도 10개라고 가정
 	for (int i = 0; i < GetListCount() - 1; ++i)
 	{
@@ -349,6 +398,7 @@ USERDATA ** SearchByIndexAgeRange(int min, int max, unsigned int* pCount)
 	*pCount = 0;
 	int cntTotal = 0;
 	// 나이를 기준으로 정렬된 USERDATA *를 값으로 갖는 자료구조 -> 배열
+	// 여기서는 min/max 고려안한 정렬만 된 새로운 공간을 가진 이중 연결리스트 주소 자료
 	USERDATA ** aList = MakeIndexAge(&cntTotal);
 
 	// cntTotal은 기준 노드의 총 개수
