@@ -13,6 +13,8 @@ MY_MENU PrintMenu(void)
 	return input;
 }
 
+// 해석완료
+// 기존 연결 리스트 돌려서 print
 void PrintList(int wait)
 {
 	USERDATA* pTmp = &g_HeadNode;
@@ -30,6 +32,8 @@ void PrintList(int wait)
 		printf("printlist\n");
 }
 
+// 해석완료!
+// 나이 인덱스로 보여주고 이름 인덱스로 보여줍니다.
 void PrintListByIndex(int wait)
 {
 	if (IsEmpty())
@@ -54,6 +58,7 @@ void PrintListByIndex(int wait)
 		printf("wait\n");
 }
 
+// 해석완료 !
 void SearchByNameToRemove(void)
 {
 	char name[32] = { 0 };
@@ -88,6 +93,8 @@ void SearchByPhone(void)
 	printf("SearchByPhone\n");
 }
 
+// 해석완료 !
+// SearchByName은 Index를 사용하지는 않습니다. -> 기존 연결리스트 loop를 돕니다.
 void SearchByName(void)
 {
 	char name[32] = { 0 };
@@ -105,6 +112,7 @@ void SearchByName(void)
 	printf("searchByName\n");
 }
 
+// 해석완료!
 void AddNewUser(void)
 {
 	int age = 0;
@@ -141,13 +149,17 @@ void SearchByAge(void)
 	printf("searchbyage\n");
 }
 
+// 해석완료!
 void SearchByAgeIndex(void)
-{
+{	
+	// 최소값과 최대값을 받아옵니다.
 	int min = 0, max = 1;
 	unsigned int cnt = 0;
 	printf("[Index search] MIN MAX age: ");
 	scanf("%d%d%*c", &min, &max);
 
+	// 반환값은 USERDATA **
+	// 컬렉션을 받아와서 그 수만큼 돌려서 보여줍니다.
 	USERDATA** pResult = (USERDATA**)SearchByIndexAgeRange(min, max, &cnt);
 	USERDATA* pTmp = NULL;
 	for (unsigned int i = 0; i < cnt; ++i)
@@ -159,26 +171,27 @@ void SearchByAgeIndex(void)
 	printf("searchbyageindex\n");
 }
 
+// 해석완료!
 void EventLoopRun(void)
 {
 	MY_MENU menu = 0;
-
+	// 지금 실질적으로 사용하고 있는 함수는 5개
 	while ((menu = PrintMenu()) != 0)
 	{
 		switch (menu)
 		{
 		case NEW:
-			AddNewUser();
+			AddNewUser(); // 해석완료!
 			break;
 
 		case SEARCH:
-			SearchByName();
+			SearchByName(); // 해석완료!
 			//SearchByPhone();
 			break;
 
 		case SEARCH_RANGE:
 			//SearchByAge();
-			SearchByAgeIndex();
+			SearchByAgeIndex();  // 해석완료!
 			break;
 
 		case PRINT:
