@@ -208,7 +208,6 @@ int SearchListByPhone(USERDATA* pUser, char* pszPhone)
 // 해석완료 !
 int RemoveByName(char* pszName)
 {
-	// 첫 노드 p_cur
 	USERDATA* pCur = g_HeadNode.pNext;
 	USERDATA* pNextNode;
 	USERDATA* pPrevNode;
@@ -248,6 +247,7 @@ void AddNewNode(int age, char* pszName, char* pszPhone)
 
 	// p_next, p_prev를 최신화합니다.
 	USERDATA* pPrevNode = g_TailNode.pPrev;
+	
 	pPrevNode->pNext = pNewNode;
 	pNewNode->pPrev = pPrevNode;
 	pNewNode->pNext = &g_TailNode;
@@ -332,56 +332,6 @@ void** SearchByAgeRange(int min, int max, int* pCount)
 	return NULL;
 }
 
-// 해석완료!
-void** MakeIndexAge(int* pCnt)
-{
-	*pCnt = 0;
-
-	// 비어 있다면 돌려보냅니다.
-	if (IsEmpty())
-		return NULL;
-
-	// 인덱스 접근으로 주소를 넣기 위한 선언
-	USERDATA** aList;
-
-	// 하나의 공간의 값은 USERDATA * 타입으로 채울것이며, 주소는 USERDATA **이다.
-	// 그리고 malloc이 반환하는 것은 주소이다. -> USERDATA **이다.
-	// aList가 인덱스 접근시 도달하는 값은 USERDATA *이다. -> 주소를 가지고 컨트롤 가능
-	aList = malloc(sizeof(USERDATA*) * GetListCount());
-
-	// 그리고 모든 aList를 0으로 초기화
-	memset(aList, 0, sizeof(USERDATA*) * GetListCount());
-
-	// p_cnt는 LIST 개수
-	*pCnt = GetListCount();
-
-	// 첫 노드부터 시작 p_tmp; p_tmp가 테일 노드가 될 떄가지 반복합니다.
-	// 그리고 aList의 인덱스 접근 값은 기존 연결리스트 주소로 채워집니다.
-	USERDATA* pTmp = g_HeadNode.pNext;
-	for (int i = 0; pTmp != &g_TailNode; ++i)
-	{
-		aList[i] = pTmp;
-		pTmp = pTmp->pNext;
-	}
-
-	// 선택정렬을 통해 나이를 기준으로 한 인덱스 생성 완료
-	for (unsigned int i = 0; i < GetListCount() - 1; ++i)
-	{
-		for (unsigned int j = i + 1; j < GetListCount(); ++j)
-		{
-			if (aList[i]->age > aList[j]->age)
-			{
-				USERDATA* pTmp = aList[i];
-				aList[i] = aList[j];
-				aList[j] = pTmp;
-			}
-		}
-	}
-
-	return aList;
-}
-
-// 해석완료!
 void** SearchByIndexAgeRange(int min, int max, unsigned int* pCount)
 {
 	// 일단은 cnt는 0
@@ -461,6 +411,56 @@ void** MakeIndexName(int* pCnt)
 		for (unsigned int j = i + 1; j < GetListCount(); ++j)
 		{
 			if (strcmp(aList[i]->name, aList[j]->name) > 0)
+			{
+				USERDATA* pTmp = aList[i];
+				aList[i] = aList[j];
+				aList[j] = pTmp;
+			}
+		}
+	}
+
+	return aList;
+}
+
+// 해석완료!
+void** MakeIndexAge(int* pCnt)
+// 해석완료!
+{
+	*pCnt = 0;
+
+	// 비어 있다면 돌려보냅니다.
+	if (IsEmpty())
+		return NULL;
+
+	// 인덱스 접근으로 주소를 넣기 위한 선언
+	USERDATA** aList;
+
+	// 하나의 공간의 값은 USERDATA * 타입으로 채울것이며, 주소는 USERDATA **이다.
+	// 그리고 malloc이 반환하는 것은 주소이다. -> USERDATA **이다.
+	// aList가 인덱스 접근시 도달하는 값은 USERDATA *이다. -> 주소를 가지고 컨트롤 가능
+	aList = malloc(sizeof(USERDATA*) * GetListCount());
+
+	// 그리고 모든 aList를 0으로 초기화
+	memset(aList, 0, sizeof(USERDATA*) * GetListCount());
+
+	// p_cnt는 LIST 개수
+	*pCnt = GetListCount();
+
+	// 첫 노드부터 시작 p_tmp; p_tmp가 테일 노드가 될 떄가지 반복합니다.
+	// 그리고 aList의 인덱스 접근 값은 기존 연결리스트 주소로 채워집니다.
+	USERDATA* pTmp = g_HeadNode.pNext;
+	for (int i = 0; pTmp != &g_TailNode; ++i)
+	{
+		aList[i] = pTmp;
+		pTmp = pTmp->pNext;
+	}
+
+	// 선택정렬을 통해 나이를 기준으로 한 인덱스 생성 완료
+	for (unsigned int i = 0; i < GetListCount() - 1; ++i)
+	{
+		for (unsigned int j = i + 1; j < GetListCount(); ++j)
+		{
+			if (aList[i]->age > aList[j]->age)
 			{
 				USERDATA* pTmp = aList[i];
 				aList[i] = aList[j];

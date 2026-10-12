@@ -66,8 +66,6 @@ void SearchByNameToRemove(void)
 	printf("name: ");
 	scanf("%s", name);
 
-	USERDATA* pPrev = NULL;
-
 	if (RemoveByName(name))
 		puts("Complete");
 	else
