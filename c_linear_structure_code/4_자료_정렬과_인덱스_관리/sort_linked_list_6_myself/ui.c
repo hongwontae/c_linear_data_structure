@@ -75,6 +75,28 @@ void search_by_name_to_remove(void)
 
 	printf("search_by_name_to_remove\n");
 }
+
+void search_by_age(void)
+{
+	int min = 0, max = 1, cnt = 0;
+	printf("MIN MAX age: ");
+	scanf("%d%d%*c", &min, &max);
+
+	sort_list_by_age();
+
+	void** pResult = search_by_age_range(min, max, &cnt);
+
+	USERDATA* pTmp = NULL;
+
+	for (int i = 0; i < cnt; ++i)
+	{
+		pTmp = (USERDATA*)pResult[i];
+		printf("%d, %s, %s\n", pTmp->age, pTmp->name, pTmp->phone);
+	}
+
+	free(pResult);
+	printf("searchbyage\n");
+}
 // 해석완료!
 void event_loop_run(void)
 {

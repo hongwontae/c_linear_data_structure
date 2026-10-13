@@ -62,7 +62,7 @@ void AddNewNode(const char* pszKey,
 	MYNODE* pNewNode = calloc(1, sizeof(MYNODE));
 	int lenOfKey = (int)strlen(pszKey);
 	pNewNode->pszKey = malloc(lenOfKey + 1);
-	strcpy_s(pNewNode->pszKey, lenOfKey + 1, pszKey);
+	strcpy(pNewNode->pszKey, pszKey);
 
 	if (pData != NULL && sizeData > 0)
 	{
@@ -94,8 +94,7 @@ void* SearchListByName(char* pszKey)
 			if (pTmp->pDataCache != NULL)
 				return pTmp;
 
-			FILE* fp = NULL;
-			fopen_s(&fp, "listData.dat", "rb");
+			FILE* fp = fopen("listData.dat", "rb");
 
 			USERDATA user = { 0 };
 			fseek(fp, pTmp->offset * sizeof(USERDATA), SEEK_SET);
@@ -122,8 +121,7 @@ void* SearchListByName(char* pszKey)
 int LoadListFromFile(void)
 {
 	ReleaseList();
-	FILE* fp = NULL;
-	fopen_s(&fp, "listData.dat", "rb");
+	FILE* fp = fopen("listData.dat", "rb");
 	if (fp == NULL)
 		return 0;
 
@@ -142,8 +140,7 @@ int LoadListFromFile(void)
 
 int SaveNewDataToFile(void)
 {
-	FILE* fp = NULL;
-	fopen_s(&fp, "listData.dat", "ab+");
+	FILE* fp = fopen("listData.dat", "ab+");
 	if (fp == NULL)
 		return 0;
 
@@ -165,8 +162,7 @@ int SaveNodeToFile(MYNODE* pNode)
 	if (pNode->pDataCache == NULL || pNode->sizeOfData == 0)
 		return 0;
 
-	FILE* fp = NULL;
-	fopen_s(&fp, "listData.dat", "rb+");
+	FILE* fp = fopen("listData.dat", "rb+");
 	if (fp == NULL)
 		return 0;
 
