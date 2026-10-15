@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 
+// 단순히 자료 구조체
 typedef struct USERDATA
 {
 	int age;

@@ -14,17 +14,21 @@ MY_MENU PrintMenu(void)
 	return input;
 }
 
+// 해석 완료!
 void PrintList(int wait)
 {
 	MYNODE* pTmp = &g_HeadNode;
-	while (pTmp != NULL)// && pTmp != &g_TailNode)
+	while (pTmp != NULL)
 	{
+		// LoadListFromFile();를 통해 기존의 데이터를 통한 노드 생성완료
+		// 그 노드를 print
 		printf("[%p] %s, new: %d, offset: %d, ",
 			pTmp,
 			(const char*)pTmp->pszKey,
 			pTmp->bNew,
 			pTmp->offset);
-
+		
+		// 만약 p_tmp의 캐시데이터가 존재한다면 실행
 		if (pTmp->pDataCache != NULL)
 		{
 			USERDATA* pUser = pTmp->pDataCache;
@@ -43,6 +47,7 @@ void PrintList(int wait)
 		printf("print_list\n");
 }
 
+// 해석 완료!
 void AddNewUser(void)
 {
 	USERDATA user = { 0 };
@@ -57,6 +62,7 @@ void AddNewUser(void)
 	AddNewNode(user.name, &user, sizeof(user), true, 0);
 }
 
+// 해석 완료!
 void EditUserData(MYNODE* pNode)
 {
 	USERDATA* pUser = pNode->pDataCache;
@@ -75,6 +81,7 @@ void EditUserData(MYNODE* pNode)
 	}
 }
 
+// 해석 완료!
 void SearchByName(void)
 {
 	char name[32] = { 0 };
